@@ -1,0 +1,66 @@
+use <write.scad>;
+rod_d = 9;
+thickness = 3;
+
+height = thickness + rod_d*2;
+
+$fn=64;
+
+module top() difference(){
+
+	union(){
+		difference(){
+			cylinder(r=80, h=height, center=true);
+			cylinder(r=62, h=height + 2, center=true);
+			rotate([0, 0, 36]) translate([0, -100, 0]) cube(200, center=true);
+			rotate([0, 0, -34.5]) translate([0, -100, 0]) cube(200, center=true);
+		}
+
+		writecylinder("HEADPHONES", [0,0, 0],90,0, face="top", h=20, t=30, font="orbitron.dxf");
+	}
+
+	rotate_extrude(convexity = 10)
+		translate([129, 0, 0])
+		circle(r = 50); 
+
+	rotate([-90, 0, 0]) cylinder(d=rod_d, h=1000);
+
+}
+
+module triangle(width, height, thickness) rotate([90, 0, 0]){
+	linear_extrude(height=thickness)
+	polygon(points=[[0, 0], [width, 0], [0, height]]);
+}
+
+module bottom(){
+
+	a = 4;
+	steps = (130)/a;
+
+	cylinder(d=rod_d, h=50);
+	intersection(){
+		cylinder(r=130, h=2);
+
+		for(y=[-steps:steps], i=[-steps:steps]) translate([i*a, y*a, 0]) {
+			cube([a, a, rands(6, 10, 1)[0]], center=true);
+		}
+	}
+	cylinder(d=rod_d + thickness*2, h=26);
+
+	for(i=[0:3]) rotate([0, 0, i*90]) triangle(130, 26, 4);
+
+	translate([0, 0, 15/2]){
+		writecylinder("AC/DC", [0, 0, 0], 65, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+		rotate([0, 0, 180]) writecylinder("PAIN", [0, 0, 0], 65, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+		writecylinder("Deathstars", [0, 0, 0], 105, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+		rotate([0, 0, 180]) writecylinder("Apocalyptica", [0, 0, 0], 105, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+
+		writecylinder("Guns N'Roses", [0, 0, 0], 140, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+		rotate([0, 0, 130]) writecylinder("Korpiklaani", [0, 0, 0], 140, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+		rotate([0, 0, 240]) writecylinder("Powerwolf", [0, 0, 0], 140, 0, face="top" ,h=30, t=10, font="orbitron.dxf");
+	}
+
+
+}
+
+bottom();
